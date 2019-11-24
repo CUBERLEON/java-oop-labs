@@ -1,6 +1,8 @@
 package lab3;
 
-import common.Configs;
+import db.DbConfigs;
+import db.DbAirServices;
+import db.DbAirline;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,11 +15,11 @@ public class Server {
     private Socket sock = null;
     private DataOutputStream out = null;
     private DataInputStream in = null;
-    private AirServices services = new AirServices();
+    private DbAirServices services = new DbAirServices();
 
     public void run(int port) throws Exception {
         server = new ServerSocket(port);
-        services.connect(Configs.URL, Configs.USER, Configs.PASSWORD);
+        services.connect(DbConfigs.URL, DbConfigs.USER, DbConfigs.PASSWORD);
 
         while (true) {
             sock = server.accept();
@@ -39,20 +41,20 @@ public class Server {
             int oper = in.readInt();
             System.out.println(oper);
 
-            if (oper == OperTypes.ADD_AIRLINE) {
+            if (oper == OperationTypes.ADD_AIRLINE) {
                 int code = in.readInt();
                 String name = in.readUTF();
                 out.writeBoolean(services.addAirline(code, name));
-            } else if (oper == OperTypes.QUERY_AIRLINE) {
+            } else if (oper == OperationTypes.QUERY_AIRLINE) {
                 int code = in.readInt();
                 services.getAirline(code).serialize(out);
-            } else if (oper == OperTypes.LIST_AIRLINES) {
-                ArrayList<Airline> airlines = services.getAirlines();
+            } else if (oper == OperationTypes.LIST_AIRLINES) {
+                ArrayList<DbAirline> airlines = services.getAirlines();
                 out.writeInt(airlines.size());
-                for (Airline airline : airlines) {
+                for (DbAirline airline : airlines) {
                     airline.serialize(out);
                 }
-            } else if (oper == OperTypes.DELETE_AIRLINE) {
+            } else if (oper == OperationTypes.DELETE_AIRLINE) {
                 int code = in.readInt();
                 out.writeBoolean(services.deleteAirline(code));
             }

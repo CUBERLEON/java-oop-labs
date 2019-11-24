@@ -1,6 +1,8 @@
 package lab4;
 
-import common.Configs;
+import db.DbConfigs;
+import db.DbAirServices;
+import db.IDbServices;
 
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
@@ -10,10 +12,10 @@ public class Server {
     private static final int PORT = 12300;
 
     public static void main(String args[]) throws Exception {
-        AirServices services = new AirServices();
-        services.connect(Configs.URL, Configs.USER, Configs.PASSWORD);
+        DbAirServices services = new DbAirServices();
+        services.connect(DbConfigs.URL, DbConfigs.USER, DbConfigs.PASSWORD);
 
-        IServices stub = (IServices) UnicastRemoteObject.exportObject(services, 0);
+        IDbServices stub = (IDbServices) UnicastRemoteObject.exportObject(services, 0);
 
         Registry registry = LocateRegistry.createRegistry(PORT);
 

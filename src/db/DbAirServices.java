@@ -1,14 +1,14 @@
-package lab4;
+package db;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class AirServices implements IServices {
+public class DbAirServices implements IDbServices {
     private Connection con;
     private Statement stmt;
 
-    public AirServices() {
+    public DbAirServices() {
         con = null;
         stmt = null;
     }
@@ -40,7 +40,7 @@ public class AirServices implements IServices {
         }
     }
 
-    public Airline getAirline(int code) throws Exception {
+    public DbAirline getAirline(int code) throws Exception {
         String sql = "SELECT id, name FROM airlines WHERE id=" + code;
         try {
             ResultSet rs = stmt.executeQuery(sql);
@@ -48,7 +48,7 @@ public class AirServices implements IServices {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                return new Airline(id, name);
+                return new DbAirline(id, name);
             }
             rs.close();
         } catch (SQLException e) {
@@ -58,8 +58,8 @@ public class AirServices implements IServices {
         return null;
     }
 
-    public ArrayList<Airline> getAirlines() throws Exception {
-        ArrayList<Airline> airlines = new ArrayList<>();
+    public ArrayList<DbAirline> getAirlines() throws Exception {
+        ArrayList<DbAirline> airlines = new ArrayList<>();
         String sql = "SELECT id, name FROM airlines";
         try {
             ResultSet rs = stmt.executeQuery(sql);
@@ -67,7 +67,7 @@ public class AirServices implements IServices {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                airlines.add(new Airline(id, name));
+                airlines.add(new DbAirline(id, name));
             }
             rs.close();
         } catch (SQLException e) {
@@ -135,7 +135,7 @@ public class AirServices implements IServices {
         }
     }
 
-    public Flight getFlight(int code) {
+    public DbFlight getFlight(int code) {
         String sql = "SELECT id FROM flights WHERE id=" + code;
         try {
             ResultSet rs = stmt.executeQuery(sql);
@@ -150,7 +150,7 @@ public class AirServices implements IServices {
                 Date departure = rs.getDate("departure");
                 Date arrival = rs.getDate("arrival");
 
-                return new Flight(id, airline_id, name, airportFrom, airportTo, aircraft, departure, arrival);
+                return new DbFlight(id, airline_id, name, airportFrom, airportTo, aircraft, departure, arrival);
             }
             rs.close();
         } catch (SQLException e) {
@@ -160,8 +160,8 @@ public class AirServices implements IServices {
         return null;
     }
 
-    public ArrayList<Flight> getFlights() {
-        ArrayList<Flight> flights = new ArrayList<>();
+    public ArrayList<DbFlight> getFlights() {
+        ArrayList<DbFlight> flights = new ArrayList<>();
         String sql = "SELECT * FROM flights";
         try {
             ResultSet rs = stmt.executeQuery(sql);
@@ -176,7 +176,7 @@ public class AirServices implements IServices {
                 Date departure = rs.getDate("departure");
                 Date arrival = rs.getDate("arrival");
 
-                flights.add(new Flight(id, airline_id, name, airportFrom, airportTo, aircraft, departure, arrival));
+                flights.add(new DbFlight(id, airline_id, name, airportFrom, airportTo, aircraft, departure, arrival));
             }
             rs.close();
         } catch (SQLException e) {
@@ -186,8 +186,8 @@ public class AirServices implements IServices {
         return flights;
     }
 
-    public ArrayList<Flight> getFlightsByAirline(int airlineCode) {
-        ArrayList<Flight> flights = new ArrayList<>();
+    public ArrayList<DbFlight> getFlightsByAirline(int airlineCode) {
+        ArrayList<DbFlight> flights = new ArrayList<>();
         String sql = "SELECT * FROM flights WHERE airline_id=" + airlineCode;
         try {
             ResultSet rs = stmt.executeQuery(sql);
@@ -202,7 +202,7 @@ public class AirServices implements IServices {
                 Date departure = rs.getDate("departure");
                 Date arrival = rs.getDate("arrival");
 
-                flights.add(new Flight(id, airline_id, name, airportFrom, airportTo, aircraft, departure, arrival));
+                flights.add(new DbFlight(id, airline_id, name, airportFrom, airportTo, aircraft, departure, arrival));
             }
             rs.close();
         } catch (SQLException e) {

@@ -1,18 +1,19 @@
-package lab3;
+package db;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.Serializable;
 
-public class Airline {
+public class DbAirline implements Serializable {
     public int code;
     public String name;
 
-    public Airline(int code, String name) {
+    public DbAirline(int code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    public Airline(DataInputStream in) throws Exception {
+    public DbAirline(DataInputStream in) throws Exception {
         code = in.readInt();
         name = in.readUTF();
     }
