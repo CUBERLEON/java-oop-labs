@@ -23,6 +23,4 @@ public class Server {
 
         System.err.println("Server ready");
     }
-
-
 }

@@ -8,10 +8,7 @@ public class Client {
 
     public static void main(String[] args) throws Exception {
         DbExamples examples = new DbExamples(getServicesInstance());
-        examples.example1();
-//        examples.example2();
-//        examples.example3();
-//        examples.example4();
+        examples.runAll();
     }
 
     public static SocketServices getServicesInstance() throws Exception {

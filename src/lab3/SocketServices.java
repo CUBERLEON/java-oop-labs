@@ -61,31 +61,64 @@ public class SocketServices implements IDbServices {
 
     @Override
     public boolean addFlight(int code, String name, String airportFrom, String airportTo, String aircraft, String departure, String arrival, int airlineCode) throws Exception {
-        return false;
+        out.writeInt(OperationTypes.ADD_FLIGHT);
+        out.writeInt(code);
+        out.writeInt(airlineCode);
+        out.writeUTF(name);
+        out.writeUTF(airportFrom);
+        out.writeUTF(airportTo);
+        out.writeUTF(aircraft);
+        out.writeUTF(departure);
+        out.writeUTF(arrival);
+        return in.readBoolean();
     }
 
     @Override
     public boolean updateFlight(int code, Map<String, String> changes) throws Exception {
-        return false;
+        out.writeInt(OperationTypes.UPDATE_FLIGHT);
+        out.writeInt(code);
+        out.writeInt(changes.size());
+        for (Map.Entry entry : changes.entrySet()) {
+            out.writeUTF((String)entry.getKey());
+            out.writeUTF((String)entry.getValue());
+        }
+        return in.readBoolean();
     }
 
     @Override
     public DbFlight getFlight(int code) throws Exception {
-        return null;
+        out.writeInt(OperationTypes.QUERY_FLIGHT);
+        out.writeInt(code);
+        return new DbFlight(in);
     }
 
     @Override
     public ArrayList<DbFlight> getFlights() throws Exception {
-        return null;
+        out.writeInt(OperationTypes.LIST_FLIGHTS);
+        ArrayList<DbFlight> flights = new ArrayList<>();
+        int cnt = in.readInt();
+        for (int i = 0; i < cnt; ++i) {
+            flights.add(new DbFlight(in));
+        }
+        return flights;
     }
 
     @Override
     public ArrayList<DbFlight> getFlightsByAirline(int airlineCode) throws Exception {
-        return null;
+        out.writeInt(OperationTypes.LIST_FLIGHTS_BY_AIRLINE);
+        out.writeInt(airlineCode);
+        ArrayList<DbFlight> flights = new ArrayList<>();
+        int cnt = in.readInt();
+        for (int i = 0; i < cnt; ++i) {
+            flights.add(new DbFlight(in));
+        }
+        return flights;
     }
 
     @Override
     public boolean deleteFlight(int code) throws Exception {
-        return false;
+        out.writeInt(OperationTypes.DELETE_FLIGHT);
+        out.writeInt(code);
+        return in.readBoolean();
     }
 }
