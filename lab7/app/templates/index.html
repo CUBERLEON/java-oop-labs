@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Hi, {{ current_user.username }}!</h1>
+
+    <form class="form-inline" action="upload" method=post enctype=multipart/form-data>
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <label class="sr-only" for="inlineFormInput">Choose File</label>
+                <input type=file class="form-control-file" name=file>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-2">Upload</button>
+            </div>
+        </div>
+    </form>
+
+    {% for file in current_user.files %}
+    <div><p>{{ file.name }} says: <b>{{ file.timestamp }}</b></p></div>
+    {% endfor %}
+{% endblock %}
