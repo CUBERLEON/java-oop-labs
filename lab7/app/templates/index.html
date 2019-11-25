@@ -14,8 +14,28 @@
             </div>
         </div>
     </form>
-
+<table class="table table-bordered">
+    <tr>
+        <th>File name</th>
+        <th>Upload time</th>
+        <th>Download</th>
+        <th>Delete</th>
+    </tr>
     {% for file in current_user.files %}
-    <div><p>{{ file.name }} says: <b>{{ file.timestamp }}</b></p></div>
+    <tr>
+        <td>{{ file.name }}</td>
+        <td>{{ file.timestamp }}</td>
+        <td>
+            <form class="form-inline" action="download/{{ file.name }}" method=get enctype=multipart/form-data>
+                <button type="submit" class="btn btn-primary mb-2">Download</button>
+            </form>
+        </td>
+        <td>
+            <form class="form-inline" action="delete/{{ file.name }}" method=get enctype=multipart/form-data>
+                <button type="submit" class="btn btn-primary mb-2">Delete</button>
+            </form>
+        </td>
+    </tr>
     {% endfor %}
+</table>
 {% endblock %}

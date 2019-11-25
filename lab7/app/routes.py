@@ -1,4 +1,6 @@
-from flask import render_template, flash, redirect, url_for, request
+import os
+
+from flask import render_template, flash, redirect, url_for, request, send_file
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
@@ -67,5 +69,29 @@ def upload():
 
         db_entry = File(name=filename, user_id=current_user.id)
         db.session.add(db_entry)
+        db.session.commit()
+    return redirect(url_for('index'))
+
+
+@app.route('/download/<path:filename>', methods=['GET'])
+@login_required
+def download(filename):
+    dir = SAVE_DIR / current_user.username
+    filepath = dir / filename
+    print(f"FILEPATH={filepath}")
+    return send_file(str(filepath), as_attachment=True)
+
+
+@app.route('/delete/<path:filename>', methods=['GET'])
+@login_required
+def delete(filename):
+    dir = SAVE_DIR / current_user.username
+    filepath = dir / filename
+    print(f"FILEPATH={filepath}")
+    if filepath.exists():
+        os.remove(str(filepath))
+    db_entry = File.query.filter_by(name=filename).first()
+    if db_entry is not None:
+        db.session.delete(db_entry)
         db.session.commit()
     return redirect(url_for('index'))
